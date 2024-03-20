@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  store:
+    container_name: store
+    image: samply/blaze:develop
+    environment:
+      BASE_URL: "http://store:8080"
+    ports:
+      - "8080:8080"
+  data-loader:
+    container_name: data-loader
+    image: samply/data-loader
+    environment:
+      FHIR_STORE_URL: "http://store:8080/fhir"
+    command: sh -c "ls -la /app && ls -la /app/sample && sleep 90 && /app/run.sh" # wait for Blaze to start
+    volumes:
+      - "./test-data/:/app/sample/"
